@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Dashboard - EventEase</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="dashboard-container">
+  <div class="dashboard">
+    <!-- Navigation -->
+    <nav class="dashboard-nav">
+      <div class="nav-brand">
+        <div class="nav-logo">
+          <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
+            <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" fill="white"/>
+          </svg>
+        </div>
+        <h2>EventEase</h2>
+      </div>
+      <div class="nav-user">
+        <div class="user-details">
+          <h4 id="userName"></h4>
+          <p id="userEmail"></p>
+        </div>
+        <div class="user-avatar" id="userAvatar"></div>
+        <button class="btn btn-secondary" onclick="logout()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          Logout
+        </button>
+      </div>
+    </nav>
+
+    <!-- Stats Section -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <div>
+            <div class="stat-value" id="totalBookings">0</div>
+            <div class="stat-label">Total Bookings</div>
+          </div>
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <div>
+            <div class="stat-value" id="confirmedBookings">0</div>
+            <div class="stat-label">Confirmed</div>
+          </div>
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <div>
+            <div class="stat-value" id="totalRsvps">0</div>
+            <div class="stat-label">RSVPs</div>
+          </div>
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Available Events Section -->
+    <div class="section">
+      <div class="section-header">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Available Events
+        </h3>
+      </div>
+      <div id="eventsGrid" class="events-grid">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading events...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Bookings Section -->
+    <div class="section">
+      <div class="section-header">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+          </svg>
+          My Bookings
+        </h3>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Event</th>
+            <th>Seats</th>
+            <th>Amount</th>
+            <th>Booking Status</th>
+            <th>Payment Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody id="bookingsBody">
+          <tr>
+            <td colspan="8" class="loading">
+              <div class="spinner"></div>
+              <p>Loading bookings...</p>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- My RSVPs Section -->
+    <div class="section">
+      <div class="section-header">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          My RSVPs
+        </h3>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr>
+            <th>Event</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Response</th>
+            <th>RSVP Date</th>
+          </tr>
+          </thead>
+          <tbody id="rsvpBody">
+          <tr>
+            <td colspan="5" class="loading">
+              <div class="spinner"></div>
+              <p>Loading RSVPs...</p>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Book Event</h2>
+      <button class="close-btn" onclick="closeBookingModal()">&times;</button>
+    </div>
+    <form id="bookingForm">
+      <input type="hidden" id="eventId">
+      <div class="form-group">
+        <label>Event Name</label>
+        <input type="text" id="eventName" readonly style="background: rgba(0, 0, 0, 0.7); color: white;">
+      </div>
+      <div class="form-group">
+        <label>Price Per Seat</label>
+        <input type="text" id="pricePerSeat" readonly style="background: rgba(0, 0, 0, 0.7); color: white;">
+
+
+      </div>
+      <div class="form-group">
+        <label>Available Seats</label>
+        <input type="text" id="availableSeats" readonly style="background: rgba(0, 0, 0, 0.7); color: white;">
+      </div>
+      <div class="form-group">
+        <label for="seats">Number of Seats *</label>
+        <input type="number" id="seats" min="1" required placeholder="Enter number of seats" oninput="calculateTotal()">
+      </div>
+
+      <!-- Total Amount Display -->
+      <div id="totalAmountSection" style="display: none; background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <p style="color: var(--gray); font-size: 14px; margin-bottom: 4px;">Total Amount</p>
+            <p style="font-size: 32px; font-weight: 800; color: var(--primary); line-height: 1;">$<span id="totalAmount">0.00</span></p>
+          </div>
+          <div style="text-align: right;">
+            <p style="color: var(--gray); font-size: 13px;"><span id="selectedSeats">0</span> seat(s)</p>
+            <p style="color: var(--gray); font-size: 13px;">@ $<span id="displayPrice">0</span>/seat</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="paymentMethod">Payment Method *</label>
+        <select id="paymentMethod" required style="background: rgba(0, 0, 0, 0.7); color: white;">
+          <option value="">Select Payment Method</option>
+          <option value="CREDIT_CARD">Credit Card</option>
+          <option value="DEBIT_CARD">Debit Card</option>
+          <option value="ONLINE_TRANSACTION">Online Transaction</option>
+        </select>
+      </div>
+
+      <div id="bookingError" class="error-toast"></div>
+      <button type="submit" class="btn btn-primary" style="width: 100%;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Confirm Booking
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- RSVP Modal -->
+<div id="rsvpModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>RSVP to Event</h2>
+      <button class="close-btn" onclick="closeRsvpModal()">&times;</button>
+    </div>
+    <form id="rsvpForm">
+      <input type="hidden" id="rsvpEventId">
+      <div class="form-group">
+        <label>Event Name</label>
+        <input type="text" id="rsvpEventName" readonly style="background: rgba(0, 0, 0, 0.7); color: white;">
+      </div>
+      <div class="form-group">
+        <label for="rsvpResponse">Your Response *</label>
+        <select id="rsvpResponse" required>
+          <option value="">Select Response</option>
+          <option value="YES">Yes, I'll attend</option>
+          <option value="NO">No, I can't attend</option>
+          <option value="MAYBE">Maybe</option>
+        </select>
+      </div>
+      <div id="rsvpError" class="error-toast"></div>
+      <button type="submit" class="btn btn-primary" style="width: 100%;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Submit RSVP
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Add Seats Modal -->
+<div id="addSeatsModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Add More Seats</h2>
+      <button class="close-btn" onclick="closeAddSeatsModal()">&times;</button>
+    </div>
+    <form id="addSeatsForm">
+      <input type="hidden" id="updateBookingId">
+      <div class="form-group">
+        <label>Event Name</label>
+        <input type="text" id="updateEventName" readonly style="background: rgba(0, 0, 0, 0.7); color: white;">
+      </div>
+      <div class="form-group">
+        <label>Current Seats</label>
+        <input type="text" id="currentSeats" readonly style="background: rgba(0, 0, 0, 0.7); color: white;">
+      </div>
+      <div class="form-group">
+        <label>Price Per Seat</label>
+        <input type="text" id="updatePricePerSeat" readonly style="background: rgba(0, 0, 0, 0.7); color: white;">
+      </div>
+      <div class="form-group">
+        <label>Available Seats to Add</label>
+        <input type="text" id="updateAvailableSeats" readonly style="background: rgba(0, 0, 0, 0.7); color: white;">
+      </div>
+      <div class="form-group">
+        <label for="additionalSeats">Additional Seats *</label>
+        <input type="number" id="additionalSeats" min="1" required placeholder="Enter number of seats to add" oninput="calculateUpdateTotal()">
+      </div>
+
+      <!-- Additional Amount Display -->
+      <div id="updateTotalSection" style="display: none; background: linear-gradient(135deg, #10b98115 0%, #059f6915 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <p style="color: var(--gray); font-size: 14px; margin-bottom: 4px;">Additional Amount</p>
+            <p style="font-size: 32px; font-weight: 800; color: var(--success); line-height: 1;">$<span id="additionalAmount">0.00</span></p>
+          </div>
+          <div style="text-align: right;">
+            <p style="color: var(--gray); font-size: 13px;">+<span id="addingSeats">0</span> seat(s)</p>
+            <p style="color: var(--dark); font-size: 14px; font-weight: 600; margin-top: 8px;">New Total: $<span id="newTotalAmount">0.00</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div id="addSeatsError" class="error-toast"></div>
+      <button type="submit" class="btn btn-primary" style="width: 100%;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add Seats to Booking
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Cancel Booking Confirmation Modal -->
+<div id="cancelModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Cancel Booking</h2>
+      <button class="close-btn" onclick="closeCancelModal()">&times;</button>
+    </div>
+    <div style="margin-bottom: 24px;">
+      <input type="hidden" id="cancelBookingId">
+
+      <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+        <div style="display: flex; gap: 12px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <div>
+            <h4 style="color: #92400e; margin-bottom: 4px;">Confirm Cancellation</h4>
+            <p style="color: #92400e; font-size: 14px;">Are you sure you want to cancel this booking?</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Event</label>
+        <input type="text" id="cancelEventName" readonly style="background: rgba(0, 0, 0, 0.7); color: white;">
+      </div>
+
+      <div class="form-group">
+        <label>Booking Amount</label>
+        <input type="text" id="cancelAmount" readonly style="background: rgba(0, 0, 0, 0.7); color: white; font-weight: 700; font-size: 18px;">
+      </div>
+
+      <div id="refundInfo" style="background: linear-gradient(135deg, #10b98115 0%, #059f6915 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px; display: none;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <h4 style="color: var(--success); font-weight: 700;">Refund Will Be Processed</h4>
+        </div>
+        <p style="color: var(--gray); font-size: 14px; margin-bottom: 12px;">
+          Since your payment has been completed, a full refund will be automatically processed to your original payment method.
+        </p>
+        <div style="background: white; padding: 16px; border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--gray); font-size: 14px;">Refund Amount:</span>
+            <span style="font-size: 24px; font-weight: 800; color: var(--success);">$<span id="refundAmount">0.00</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="noRefundInfo" style="background: #e5e7eb; padding: 16px; border-radius: 8px; margin-bottom: 20px; display: none;">
+        <p style="color: var(--gray); font-size: 14px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          Your payment is still pending approval, so no refund is necessary.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <button class="btn btn-secondary" onclick="closeCancelModal()" style="flex: 1;">
+          Keep Booking
+        </button>
+        <button class="btn btn-danger" onclick="confirmCancelBooking()" style="flex: 1;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Yes, Cancel Booking
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="customer-dashboard.js"></script>
+</body>
+</html>

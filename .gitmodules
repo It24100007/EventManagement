@@ -1,0 +1,3 @@
+[submodule "booking-management"]
+	path = booking-management
+	url = https://github.com/it24100038/Web-based-event-management-system-.git
